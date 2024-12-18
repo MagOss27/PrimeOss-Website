@@ -4,7 +4,7 @@ export async function getCollectionBySlug(slug: string) {
   const wixClient = getWixClient();
 
   const { collection } =
-    await wixClient.collections.getCollectionBySlug("featured-products");
+    await wixClient.collections.getCollectionBySlug(slug);
 
   return collection || null;
 }

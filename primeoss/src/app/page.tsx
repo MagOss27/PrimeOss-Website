@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { delay } from "@/lib/utils";
 import { Suspense } from "react";
-import { getWixClient } from "@/lib/wix-client.base";
 import Product from "@/components/Products";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCollectionBySlug } from "@/wix-api/collection";
@@ -38,7 +37,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-secondary via-transparent to-transparent" />
         </div>
       </div>
-      <Suspense fallback={<LoadingSkeleton/>}>
+      <Suspense fallback={<LoadingSkeleton />}>
         <FeaturedProducts />
       </Suspense>
     </main>
@@ -57,6 +56,7 @@ async function FeaturedProducts() {
   const featuredProducts = await queryProducts({
     collectionIds: collection._id,
   });
+  console.log("Featured Products:", featuredProducts);
 
   if (!featuredProducts.items.length) {
     return null;

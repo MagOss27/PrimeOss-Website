@@ -1,3 +1,4 @@
+import { products } from "@wix/stores";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -12,8 +13,36 @@ export async function delay(ms: number) {
 export function formatCurrency(
   price: number | string = 0,
   currency: string = "USD",
-){
-  return Intl.NumberFormat("en", {style: "currency", currency}).format(
+) {
+  return Intl.NumberFormat("en", { style: "currency", currency }).format(
     Number(price),
   );
+}
+
+export function findVariant(
+  product: products.Product,
+  selectedOpions: Record<string, string>,
+) {
+  if (!product.manageVariants) return null;
+
+  return (
+    product.variants?.find((variant) => {
+      return Object.entries(selectedOpions).every(
+        ([key, value]) => variant.choices?.[key] === value,
+      );
+    }) || null
+  );
+}
+
+export function checkInStock(
+  product: products.Product,
+  selectedOpions: Record<string, string>,
+) {
+  const variant = findVariant(product, selectedOpions);
+
+  return variant
+    ? variant.stock?.quantity !== 0 && variant.stock?.inStock
+    : product.stock?.inventoryStatus === products.InventoryStatus.IN_STOCK ||
+        product.stock?.inventoryStatus ===
+          products.InventoryStatus.PARTIALLY_OUT_OF_STOCK;
 }
