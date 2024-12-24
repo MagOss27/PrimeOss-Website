@@ -31,8 +31,7 @@ export default function ProductOptions({
                   name={option.name}
                   value={choice.description}
                   checked={
-                    selectedOptions[ProductOptions.name || ""] ===
-                    choice.description
+                    selectedOptions[option.name || ""] === choice.description
                   }
                   onChange={() =>
                     setSelectedOptions({
