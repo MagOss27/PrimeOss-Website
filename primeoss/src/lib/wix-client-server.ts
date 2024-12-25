@@ -2,8 +2,9 @@ import { Tokens } from "@wix/sdk";
 import { cookies } from "next/headers";
 import { WIX_SESSION_COOKIE } from "./constants";
 import { getWixClient } from "./wix-client.base";
+import { cache } from "react";
 
-export function getWixServerClient() {
+export const getWixServerClient = cache(() => {
   let tokens: Tokens | undefined;
 
   try {
@@ -11,5 +12,4 @@ export function getWixServerClient() {
   } catch (error) {}
 
   return getWixClient(tokens);
-}
-
+});
