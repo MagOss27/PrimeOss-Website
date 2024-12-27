@@ -3,12 +3,11 @@ import Link from "next/link";
 import logo from "@/assets/logo.png";
 import Image from "next/image";
 import { getWixServerClient } from "@/lib/wix-client-server";
+import ShoopingCartButton from "./ShoopingCartButton";
 
 export default async function Navbar() {
   const cart = await getCart(getWixServerClient());
 
-  const totalQuantity =
-    cart?.lineItems.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0;
   return (
     <header className="bg-background shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 p-5">
@@ -16,7 +15,7 @@ export default async function Navbar() {
           <Image src={logo} alt="PrimeOss" width={40} height={40} />
           <span className="text-xl font-bold">PrimeOss</span>
         </Link>
-        {totalQuantity} items in your cart
+        <ShoopingCartButton initialData={cart} />
       </div>
     </header>
   );

@@ -2,6 +2,10 @@ import { products } from "@wix/stores";
 import { Button, ButtonProps } from "./ui/button";
 import { addToCart } from "@/wix-api/cart";
 import { wixBrowserClient } from "@/lib/wix-client-browser";
+import LoadingButton from "./LoadingButton";
+import { useAddItemToCart } from "@/hooks/cart";
+import { cn } from "@/lib/utils";
+import ShoopingCartButton from "@/app/ShoopingCartButton";
 
 interface AddToCartButtonProps extends ButtonProps {
   product: products.Product;
@@ -16,18 +20,23 @@ export default function AddToCartButton({
   className,
   ...props
 }: AddToCartButtonProps) {
+  const mutation = useAddItemToCart();
+
   return (
-    <Button
+    <LoadingButton
       onClick={() =>
-        addToCart(wixBrowserClient, {
+        mutation.mutate({
           product,
           selectedOptions,
           quantity,
         })
       }
+      loading={mutation.isPending}
+      className={cn("flex gap-3", className)}
       {...props}
     >
+      <ShoopingCartButton />
       Add to cart
-    </Button>
+    </LoadingButton>
   );
 }
