@@ -8,9 +8,13 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import WixImage from "@/components/WixImage";
-import { useCart, useUpdateCartItemQuantity } from "@/hooks/cart";
+import {
+  useCart,
+  useRemoveCartItem,
+  useUpdateCartItemQuantity,
+} from "@/hooks/cart";
 import { currentCart } from "@wix/ecom";
-import { Loader2, ShoppingCartIcon } from "lucide-react";
+import { Loader2, ShoppingCartIcon, X } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -36,7 +40,7 @@ export default function ShoopingCartButton({
       <div className="relative">
         <Button variant="ghost" size="icon" onClick={() => setSheetOpen(true)}>
           <ShoppingCartIcon />
-          <span className="absolute right-0 top-0 size-5 rounded-full bg-primary text-xs text-primary-foreground">
+          <span className="absolute right-0 top-0 flex size-5 items-center  justify-center rounded-full bg-primary text-xs text-primary-foreground">
             {totalQuantity < 10 ? totalQuantity : "9+"}
           </span>
         </Button>
@@ -51,10 +55,12 @@ export default function ShoopingCartButton({
               </span>
             </SheetTitle>
           </SheetHeader>
-          <div className="flex grow flex-col space-y-5 overflow-y-auto">
+          <div className="flex grow flex-col space-y-5 overflow-y-auto pt-1">
             <ul className="space-y-5">
               {cartQuery.data?.lineItems?.map((item) => (
-                <ShoopingCartItem key={item._id} item={item} />
+                <ShoopingCartItem key={item._id} item={item} 
+                onProductLinkClicked={() => setSheetOpen(false)}
+                />
               ))}
             </ul>
             {cartQuery.isPending && (
@@ -77,11 +83,12 @@ export default function ShoopingCartButton({
                 </div>
               </div>
             )}
-            <pre>{JSON.stringify(cartQuery.data, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(cartQuery.data, null, 2)}</pre> */}
           </div>
+          <hr/>
           <div className="flex items-center justify-between gap-5">
             <div className="space-y-0.5">
-              <p className="text-sm">Subtotal amount</p>
+              <p className="text-sm">Subtotal amount:</p>
               <p className="font-bold">
                 {/* @ts-expect-error */}
                 {cartQuery.data?.subtotal?.formattedConvertedAmount}
@@ -102,10 +109,16 @@ export default function ShoopingCartButton({
 
 interface ShoopingCartItemProps {
   item: currentCart.LineItem;
+  onProductLinkClicked: () => void;
 }
 
-function ShoopingCartItem({ item }: ShoopingCartItemProps) {
+function ShoopingCartItem({
+  item,
+  onProductLinkClicked,
+}: ShoopingCartItemProps) {
   const updateQuantityMutation = useUpdateCartItemQuantity();
+
+  const removeItemMutation = useRemoveCartItem();
 
   const productId = item._id;
 
@@ -120,17 +133,25 @@ function ShoopingCartItem({ item }: ShoopingCartItemProps) {
 
   return (
     <li className="flex items-center gap-3">
-      <Link href={`/products/${slug}`}>
-        <WixImage
-          mediaIdentifier={item.image}
-          width={110}
-          height={110}
-          alt={item.productName?.translated || "Product image"}
-          className="flex-none bg-secondary"
-        />
-      </Link>
+      <div className="relative size-fit flex-none">
+        <Link href={`/products/${slug}`} onClick={onProductLinkClicked}>
+          <WixImage
+            mediaIdentifier={item.image}
+            width={110}
+            height={110}
+            alt={item.productName?.translated || "Product image"}
+            className="flex-none bg-secondary"
+          />
+        </Link>
+        <Button
+          className="absolute -right-1 -top-1 rounded-full border p-0.5"
+          onClick={() => removeItemMutation.mutate(productId)}
+        >
+          <X className="size-3" />
+        </Button>
+      </div>
       <div className="space-y-1.5 text-sm">
-        <Link href={`/products/${slug}`}>
+        <Link href={`/products/${slug}`} onClick={onProductLinkClicked}>
           <p className="font-bold">{item.productName?.translated || "Item"}</p>
         </Link>
         {!!item.descriptionLines?.length && (
