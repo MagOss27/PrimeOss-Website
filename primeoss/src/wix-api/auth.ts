@@ -7,7 +7,7 @@ export async function generateOAuthData(
     originPath?: string,
 ){
     return wixClient.auth.generateOAuthData(
-        env.NEXT_PUBLIC_BASE_URL + "/api;/auth/callback/wix",
+        env.NEXT_PUBLIC_BASE_URL + "/api/auth/callback/wix",
         env.NEXT_PUBLIC_BASE_URL + "/"+ (originPath || ""),
     );
 }
