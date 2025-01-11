@@ -32,7 +32,7 @@ export default async function Page({
   const title = q ? `Results for "${q}"` : "Products";
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 group-has-[[data-pending]]:animate-pulse">
       <h1 className="text-center text-3xl font-bold md:text-4xl">{title}</h1>
       <Suspense fallback={<LoadingSkeleton />} key={`${q}-${page}`}>
         <ProductResults
