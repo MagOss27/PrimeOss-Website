@@ -17,6 +17,7 @@ import { currentCart } from "@wix/ecom";
 import { Loader2, ShoppingCartIcon, X } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import CheckoutButton from "@/components/CheckoutButton";
 
 interface ShoopingCartButtonProps {
   initialData: currentCart.Cart | null;
@@ -40,7 +41,7 @@ export default function ShoopingCartButton({
       <div className="relative">
         <Button variant="ghost" size="icon" onClick={() => setSheetOpen(true)}>
           <ShoppingCartIcon />
-          <span className="absolute right-0 top-0 flex size-5 items-center  justify-center rounded-full bg-primary text-xs text-primary-foreground">
+          <span className="absolute right-0 top-0 flex size-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
             {totalQuantity < 10 ? totalQuantity : "9+"}
           </span>
         </Button>
@@ -58,8 +59,10 @@ export default function ShoopingCartButton({
           <div className="flex grow flex-col space-y-5 overflow-y-auto pt-1">
             <ul className="space-y-5">
               {cartQuery.data?.lineItems?.map((item) => (
-                <ShoopingCartItem key={item._id} item={item} 
-                onProductLinkClicked={() => setSheetOpen(false)}
+                <ShoopingCartItem
+                  key={item._id}
+                  item={item}
+                  onProductLinkClicked={() => setSheetOpen(false)}
                 />
               ))}
             </ul>
@@ -85,7 +88,7 @@ export default function ShoopingCartButton({
             )}
             {/* <pre>{JSON.stringify(cartQuery.data, null, 2)}</pre> */}
           </div>
-          <hr/>
+          <hr />
           <div className="flex items-center justify-between gap-5">
             <div className="space-y-0.5">
               <p className="text-sm">Subtotal amount:</p>
@@ -97,9 +100,10 @@ export default function ShoopingCartButton({
                 Shipping and taxes calculated at checkout
               </p>
             </div>
-            <Button size="lg" disabled={!totalQuantity || cartQuery.isFetching}>
-              Checkout
-            </Button>
+            <CheckoutButton
+              size="lg"
+              disabled={!totalQuantity || cartQuery.isFetching}
+            />
           </div>
         </SheetContent>
       </Sheet>
