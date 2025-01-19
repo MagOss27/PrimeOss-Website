@@ -5,6 +5,7 @@ import { getOrder } from "@/wix-api/order";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ClearCart from "./ClearCart";
 
 export const metadata: Metadata = {
   title: "Checkout success",
@@ -26,6 +27,10 @@ export default async function Page({ searchParams: { orderId } }: PageProps) {
     notFound();
   }
 
+  const orderCreateDate = order._createdDate
+    ? new Date(order._createdDate)
+    : null;
+
   return (
     <main className="mx-auto flex max-w-3xl flex-col items-center space-y-5 py-10">
       <h1 className="text-3xl font-bold">We received your order!</h1>
@@ -37,9 +42,13 @@ export default async function Page({ searchParams: { orderId } }: PageProps) {
           View all your orders
         </Link>
       )}
+      {orderCreateDate &&
+        orderCreateDate.getTime() > Date.now() - 60_000 * 5 && <ClearCart />}
     </main>
   );
 }
 
 // Funcionar a questão de compra de produtos do site
 // https://manage.wix.com/premium-purchase-plan/dynamo?siteGuid=7c26352d-3c1b-4b59-90c9-ee9856b5c751&referralAdditionalInfo=bizMgrHeader
+
+//2:50:00 em diante - https://www.youtube.com/watch?v=cTcCXfDm_7k
