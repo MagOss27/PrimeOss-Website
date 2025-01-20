@@ -1,4 +1,4 @@
-"Use client";
+"use client";
 
 import { useClearCart } from "@/hooks/cart";
 import { useEffect } from "react";

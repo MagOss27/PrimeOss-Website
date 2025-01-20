@@ -18,6 +18,7 @@ import {
 import { AccordionContent } from "@radix-ui/react-accordion";
 import AddToCartButton from "@/components/AddToCartButton";
 import BackInStockNotificationButton from "@/components/BackInStockNotificationButton";
+import BuyNowButton from "@/components/BuyNowButton";
 
 interface ProductDetailsProps {
   product: products.Product;
@@ -102,6 +103,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </div>
         </div>
         {inStock ? (
+          <div className="flex items-center gap-2.5">
           <AddToCartButton
             product={product}
             selectedOptions={selectedOptions}
@@ -109,6 +111,14 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             disabled={availableQuantityExceeded || quantity < 1}
             className="w-full"
           />
+          <BuyNowButton
+          product={product}
+          selectedOptions={selectedOptions}
+          quantity={quantity}
+          disabled={availableQuantityExceeded || quantity < 1 }
+          className="w-full"
+          />
+          </div>
         ) : (
           <BackInStockNotificationButton
             product={product}
