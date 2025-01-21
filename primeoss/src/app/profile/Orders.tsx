@@ -2,6 +2,7 @@
 
 import LoadingButton from "@/components/LoadingButton";
 import Order from "@/components/Order";
+import { Skeleton } from "@/components/ui/skeleton";
 import { wixBrowserClient } from "@/lib/wix-client-browser";
 import { getUserOrders } from "@/wix-api/order";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -24,6 +25,13 @@ export default function Orders() {
   return (
     <div className="space-y-5">
       <h2 className="text-2xl font-bold">You orders</h2>
+      {status === "pending" && <OrdersLoadingSkeleton/>}
+      {status === "error" && (
+        <p >Error fetching orders</p>
+      )}
+      {status === "success" && !orders.length && !hasNextPage && (
+        <p>No orders yet</p>
+      )}
       {orders.map((order) => (
         <Order key={order.number} order={order} />
       ))}
@@ -39,3 +47,10 @@ export default function Orders() {
   );
 }
 
+function OrdersLoadingSkeleton(){
+  return <div className="space-y-5">  
+  {Array.from({length:2}).map((_,i) => (
+<Skeleton key={i} className="h-64"/>
+  ))}
+  </div>
+}
