@@ -127,6 +127,5 @@ export async function getRelatedProducts(
   .in("_id", productIds)
   .limit(4)
   .find();
-
   return productsResult.items
 }
