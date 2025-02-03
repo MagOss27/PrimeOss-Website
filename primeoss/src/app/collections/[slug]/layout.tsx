@@ -6,28 +6,34 @@ import { getCollectionBySlug } from "@/wix-api/collection";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-// Tipo para o layout que o Next.js espera (síncrono)
+// Como o Next.js pode passar os parâmetros de forma assíncrona,
+// definimos a propriedade "params" como podendo ser um objeto ou uma Promise.
 interface LayoutProps {
   children: React.ReactNode;
-  params: { slug: string };
+  params: { slug: string } | Promise<{ slug: string }>;
 }
 
-// Tipo específico para o componente assíncrono de coleção
+// Um tipo específico para o componente que usará somente o "slug"
 interface CollectionsLayoutProps {
   children: React.ReactNode;
   slug: string;
 }
 
-export default function Layout({ children, params }: LayoutProps) {
+// Agora, o layout padrão é uma função assíncrona
+export default async function Layout({ children, params }: LayoutProps) {
+  // Se "params" já não for uma Promise, o await resolverá normalmente
+  const resolvedParams = await Promise.resolve(params);
+  
   return (
     <Suspense fallback={<LoadingSkeleton />}>
-      <CollectionsLayout slug={params.slug}>{children}</CollectionsLayout>
+      <CollectionsLayout slug={resolvedParams.slug}>{children}</CollectionsLayout>
     </Suspense>
   );
 }
 
+// O componente que carrega os dados da coleção também é assíncrono
 async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
-  // Simula um atraso (delay) de 2 segundos
+  // Simula um atraso (por exemplo, para demonstrar o Suspense)
   await delay(2000);
 
   const collection = await getCollectionBySlug(getWixServerClient(), slug);
