@@ -6,24 +6,25 @@ import { getCollectionBySlug } from "@/wix-api/collection";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-// Como o Next.js pode passar os parâmetros de forma assíncrona,
-// definimos a propriedade "params" como podendo ser um objeto ou uma Promise.
-interface LayoutProps {
+// Usamos tipagem simples para as props do layout e não
+// forçamos a união com Promise, para evitar conflito com a tipagem interna do Next.js.
+interface MyLayoutProps {
   children: React.ReactNode;
-  params: { slug: string } | Promise<{ slug: string }>;
+  params: any; // usamos "any" para evitar conflito com a tipagem interna
 }
 
-// Um tipo específico para o componente que usará somente o "slug"
+// Tipo específico para o componente que carrega os dados da coleção
 interface CollectionsLayoutProps {
   children: React.ReactNode;
   slug: string;
 }
 
-// Agora, o layout padrão é uma função assíncrona
-export default async function Layout({ children, params }: LayoutProps) {
-  // Se "params" já não for uma Promise, o await resolverá normalmente
-  const resolvedParams = await Promise.resolve(params);
-  
+// O layout padrão é declarado como uma função assíncrona.
+// A propriedade "params" pode ser um objeto ou uma Promise; garantimos que ela será resolvida.
+export default async function Layout({ children, params }: MyLayoutProps) {
+  // Se "params" for uma Promise, aguarde; se não, "Promise.resolve" converte para uma Promise resolvida.
+  const resolvedParams = params instanceof Promise ? await params : await Promise.resolve(params);
+
   return (
     <Suspense fallback={<LoadingSkeleton />}>
       <CollectionsLayout slug={resolvedParams.slug}>{children}</CollectionsLayout>
@@ -31,9 +32,9 @@ export default async function Layout({ children, params }: LayoutProps) {
   );
 }
 
-// O componente que carrega os dados da coleção também é assíncrono
+// O componente que carrega os dados da coleção utiliza apenas o "slug" resolvido.
 async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
-  // Simula um atraso (por exemplo, para demonstrar o Suspense)
+  // Simula um atraso para demonstrar o uso do Suspense
   await delay(2000);
 
   const collection = await getCollectionBySlug(getWixServerClient(), slug);
