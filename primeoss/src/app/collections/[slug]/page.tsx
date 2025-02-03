@@ -3,7 +3,7 @@ import Product from "@/components/Product";
 import { Skeleton } from "@/components/ui/skeleton";
 import { delay } from "@/lib/utils";
 import { getWixServerClient } from "@/lib/wix-client-server";
-import { getCollectionBySlug } from "@/wix-api/collection";
+import { getCollectionBySlug } from "@/wix-api/collections";
 import { queryProducts } from "@/wix-api/products";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";

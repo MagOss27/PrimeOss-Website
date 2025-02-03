@@ -1,47 +1,28 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import WixImage from "@/components/WixImage";
-import { cn, delay } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { getWixServerClient } from "@/lib/wix-client-server";
-import { getCollectionBySlug } from "@/wix-api/collection";
+import { getCollectionBySlug } from "@/wix-api/collections";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-// Ajustamos a tipagem para permitir que `params` seja um objeto ou uma Promise que resolve para esse objeto
-interface MyLayoutProps {
+interface LayoutProps {
   children: React.ReactNode;
-  params: { slug: string } | Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
-// Tipo específico para o componente que carrega os dados da coleção
-interface CollectionsLayoutProps {
-  children: React.ReactNode;
-  slug: string;
-}
-
-// Layout assíncrono que resolve os parâmetros e renderiza o componente da coleção dentro do Suspense
-export default async function Layout({ children, params }: MyLayoutProps) {
-  // Se `params` for uma Promise, aguarda a resolução, caso contrário usa diretamente
-  const resolvedParams = params instanceof Promise ? await params : params;
-
+export default function Layout({ children, params }: LayoutProps) {
   return (
     <Suspense fallback={<LoadingSkeleton />}>
-      <CollectionsLayout slug={resolvedParams.slug}>
-        {children}
-      </CollectionsLayout>
+      <CollectionsLayout params={params}>{children}</CollectionsLayout>
     </Suspense>
   );
 }
 
-// Componente que carrega os dados da coleção e renderiza o conteúdo
-async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
-  // Simula um atraso para demonstrar o uso do Suspense
-  await delay(2000);
-
+async function CollectionsLayout({ children, params: { slug } }: LayoutProps) {
   const collection = await getCollectionBySlug(getWixServerClient(), slug);
 
-  if (!collection) {
-    notFound();
-  }
+  if (!collection) notFound();
 
   const banner = collection.media?.mainMedia?.image;
 
@@ -64,8 +45,8 @@ async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
         )}
         <h1
           className={cn(
-            "text-3x1 mx-auto font-bold md:text-4xl",
-            banner && "sm:hidden"
+            "mx-auto text-3xl font-bold md:text-4xl",
+            banner && "sm:hidden",
           )}
         >
           {collection.name}
@@ -76,7 +57,6 @@ async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
   );
 }
 
-// Componente de fallback exibido durante o carregamento
 function LoadingSkeleton() {
   return (
     <main className="mx-auto max-w-7xl space-y-10 px-5 py-10">

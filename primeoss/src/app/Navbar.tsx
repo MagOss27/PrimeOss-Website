@@ -6,7 +6,7 @@ import { getWixServerClient } from "@/lib/wix-client-server";
 import ShoopingCartButton from "./ShoopingCartButton";
 import UserButton from "@/components/UserButton";
 import { getLoggedInMember } from "@/wix-api/members";
-import { getCollections } from "@/wix-api/collection";
+import { getCollections } from "@/wix-api/collections";
 import MainNavigation from "./MainNavigation";
 import SearchField from "@/components/SearchField";
 import MobileMenu from "@/MobileMenu";
