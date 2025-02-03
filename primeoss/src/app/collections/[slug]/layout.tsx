@@ -6,25 +6,35 @@ import { getCollectionBySlug } from "@/wix-api/collection";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+// Tipo para o layout que o Next.js espera (síncrono)
 interface LayoutProps {
   children: React.ReactNode;
   params: { slug: string };
 }
 
+// Tipo específico para o componente assíncrono de coleção
+interface CollectionsLayoutProps {
+  children: React.ReactNode;
+  slug: string;
+}
+
 export default function Layout({ children, params }: LayoutProps) {
   return (
     <Suspense fallback={<LoadingSkeleton />}>
-      <CollectionsLayout params={params}>{children}</CollectionsLayout>
+      <CollectionsLayout slug={params.slug}>{children}</CollectionsLayout>
     </Suspense>
   );
 }
 
-async function CollectionsLayout({ children, params: { slug } }: LayoutProps) {
+async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
+  // Simula um atraso (delay) de 2 segundos
   await delay(2000);
 
   const collection = await getCollectionBySlug(getWixServerClient(), slug);
 
-  if (!collection) notFound();
+  if (!collection) {
+    notFound();
+  }
 
   const banner = collection.media?.mainMedia?.image;
 
@@ -48,7 +58,7 @@ async function CollectionsLayout({ children, params: { slug } }: LayoutProps) {
         <h1
           className={cn(
             "text-3x1 mx-auto font-bold md:text-4xl",
-            banner && "sm:hidden",
+            banner && "sm:hidden"
           )}
         >
           {collection.name}
