@@ -6,11 +6,10 @@ import { getCollectionBySlug } from "@/wix-api/collection";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-// Usamos tipagem simples para as props do layout e não
-// forçamos a união com Promise, para evitar conflito com a tipagem interna do Next.js.
+// Ajustamos a tipagem para permitir que `params` seja um objeto ou uma Promise que resolve para esse objeto
 interface MyLayoutProps {
   children: React.ReactNode;
-  params: any; // usamos "any" para evitar conflito com a tipagem interna
+  params: { slug: string } | Promise<{ slug: string }>;
 }
 
 // Tipo específico para o componente que carrega os dados da coleção
@@ -19,20 +18,21 @@ interface CollectionsLayoutProps {
   slug: string;
 }
 
-// O layout padrão é declarado como uma função assíncrona.
-// A propriedade "params" pode ser um objeto ou uma Promise; garantimos que ela será resolvida.
+// Layout assíncrono que resolve os parâmetros e renderiza o componente da coleção dentro do Suspense
 export default async function Layout({ children, params }: MyLayoutProps) {
-  // Se "params" for uma Promise, aguarde; se não, "Promise.resolve" converte para uma Promise resolvida.
-  const resolvedParams = params instanceof Promise ? await params : await Promise.resolve(params);
+  // Se `params` for uma Promise, aguarda a resolução, caso contrário usa diretamente
+  const resolvedParams = params instanceof Promise ? await params : params;
 
   return (
     <Suspense fallback={<LoadingSkeleton />}>
-      <CollectionsLayout slug={resolvedParams.slug}>{children}</CollectionsLayout>
+      <CollectionsLayout slug={resolvedParams.slug}>
+        {children}
+      </CollectionsLayout>
     </Suspense>
   );
 }
 
-// O componente que carrega os dados da coleção utiliza apenas o "slug" resolvido.
+// Componente que carrega os dados da coleção e renderiza o conteúdo
 async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
   // Simula um atraso para demonstrar o uso do Suspense
   await delay(2000);
@@ -76,6 +76,7 @@ async function CollectionsLayout({ children, slug }: CollectionsLayoutProps) {
   );
 }
 
+// Componente de fallback exibido durante o carregamento
 function LoadingSkeleton() {
   return (
     <main className="mx-auto max-w-7xl space-y-10 px-5 py-10">
