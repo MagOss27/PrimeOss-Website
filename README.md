@@ -2,7 +2,7 @@
 
 Este projeto é uma aplicação de e-commerce full-stack construída com Next.js 15 e Wix Studio Headless. Ele demonstra a integração de funcionalidades modernas para criação de lojas online, incluindo gerenciamento de produtos, carrinho de compras, checkout, reviews com upload de mídia e temas responsivos.
 
-## 🔧Ferramentas e Tecnologias
+## 🔧 Ferramentas e Tecnologias
 
 - **Next.js 15** – Framework React para renderização e roteamento avançados.
 - **Wix Studio Headless** – Plataforma para gerenciamento de produtos e integração via API.
@@ -11,7 +11,12 @@ Este projeto é uma aplicação de e-commerce full-stack construída com Next.js
 - **Shadcn UI** – Componentes UI customizados.
 - **React Hook Form & Zod** – Validação de formulários em tempo real.
 
-## Instalação
+## 🚀 Instalação
+
+1. Clone o repositório
+Clone o repositório do projeto e acesse a pasta:
+
+    git clone 
 
 Para instalar todas as dependências do projeto, execute o comando abaixo:
 
