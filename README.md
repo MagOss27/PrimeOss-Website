@@ -11,23 +11,29 @@ Este projeto é uma aplicação de e-commerce full-stack construída com Next.js
 - **Shadcn UI** – Componentes UI customizados.
 - **React Hook Form & Zod** – Validação de formulários em tempo real.
 
-## 🚀 Instalação
+## 🚀 Instalação e Configuração
 
-1. Clone o repositório
-Clone o repositório do projeto e acesse a pasta:
+### 1. Clone o Repositório
+Primeiro, clone o repositório do projeto e navegue até a pasta clonada:
 
- git clone https://github.com/MagOss27/PrimeOss-Website.git
+     git clone https://github.com/MagOss27/PrimeOss-Website.git
+     cd PrimeOss-Website
 
- 2. Instale as dependências
-
-Execute o comando abaixo para instalar todas as dependências do projeto. Caso encontre problemas com as dependências, utilize a flag --legacy-peer-deps:
-
-Para instalar todas as dependências do projeto, execute o comando abaixo:
+### 2. Instale as Dependências
+Instale todas as dependências necessárias utilizando o npm:
 
     npm install --legacy-peer-deps
 
-**Observação:** O arquivo de variáveis de ambiente (.env) é privado e não está incluído neste repositório.
+### 3. Configuração do Arquivo de Variáveis de Ambiente
+O arquivo .env é confidencial e não está incluído neste repositório.
 
-## Contato
+#### Passo Fundamental:
+Após concluir a instalação das dependências, crie um arquivo chamado .env na raiz do projeto. Nele, você deverá definir todas as variáveis necessárias para o funcionamento correto da aplicação, como, por exemplo:
+
+- Credenciais do banco de dados;
+- Chaves de API;
+- Outras configurações sensíveis e específicas do ambiente.
+
+## 📞 Contato
 
 Caso tenha dúvidas ou deseje entrar em contato, envie um e-mail para: MagnusOss98@gmail.com
