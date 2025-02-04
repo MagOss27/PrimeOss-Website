@@ -16,7 +16,11 @@ Este projeto é uma aplicação de e-commerce full-stack construída com Next.js
 1. Clone o repositório
 Clone o repositório do projeto e acesse a pasta:
 
-    git clone 
+ git clone https://github.com/MagOss27/PrimeOss-Website.git
+
+ 2. Instale as dependências
+
+Execute o comando abaixo para instalar todas as dependências do projeto. Caso encontre problemas com as dependências, utilize a flag --legacy-peer-deps:
 
 Para instalar todas as dependências do projeto, execute o comando abaixo:
 
